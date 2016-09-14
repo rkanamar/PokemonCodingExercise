@@ -9,18 +9,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Pokemonsale {
 
 	public Map<String, Integer> productCount = new ConcurrentHashMap<String, Integer>();
-
+	
 	public Map<String, Integer> productCost = null;
-
-	// public Map<String,Integer> productCost = new HashMap<String,Integer>();
 
 	public Map<Integer, Double> productDiscount = null;
 
-	// public Map<Integer,Double> productDiscount = new
-	// HashMap<Integer,Double>();
-
 	public Double bestPrice = 0.0;
 
+	/**
+	 * Initializing the Pokemon Products cost map and discounts map.
+	 */
 	Pokemonsale() {
 		productCost = new HashMap<String, Integer>();
 		productCost.put("Pikachu", 6);
@@ -31,11 +29,30 @@ public class Pokemonsale {
 		productDiscount.put(2, 10.0);
 		productDiscount.put(3, 20.0);
 	}
-	
+
+	/**
+	 * This method updates the productCount map based on the user selection.
+	 * 
+	 * @param productQuantities
+	 */
+
 	public void insertProductQuantites(Map<String, Integer> productQuantities) {
 		this.productCount = productQuantities;
 	}
-	
+
+	/**
+	 * This Method calculates the bestPrice of the Selected Pokemon Combinations
+	 * based on the selected number of products. Ex: - Pikachu -3, Squirtle - 2,
+	 * Charmander -2. In the above selection commonNumberCount - 2 (Go to findCommonNumber method to find out this value) 
+	 * noOfProducts selection - 3 as three selections are provided, discount - 20% based on
+	 * the requirement. During the first iteration, it will execute "if" part
+	 * with the discount evaluation and then the Product count will be updated
+	 * so the map will become now Pikachu - 1, Squirtle - 0, Charmander - 0. Now
+	 * the second iteration will be executed as one more product selection is
+	 * left which gets the bestPrice after the calculation. This Method gets
+	 * iterated until the products left out which provides the best price
+	 * finally.
+	 */
 	public void calculatePrice() {
 		int commonNumberCount = findCommonNumber(productCount);
 		int noOfProducts = productCount.size();
@@ -51,6 +68,10 @@ public class Pokemonsale {
 		updateProductCount(commonNumberCount);
 	}
 
+	/**
+	 * This Map removes the products when discount and calculation is evaluated
+	 * and iterates for the remaining products calculation.
+	 */
 	public void updateProductCount(int commonNumberCount) {
 
 		for (String productName : productCount.keySet()) {
@@ -64,6 +85,12 @@ public class Pokemonsale {
 			calculatePrice();
 	}
 
+	/**
+	 * This method returns the sum of selected Pokemons.
+	 * 
+	 * @param productCount
+	 * @return
+	 */
 	public int productSum(Map<String, Integer> productCount) {
 		int productSum = 0;
 		for (String productName : productCount.keySet())
@@ -71,6 +98,15 @@ public class Pokemonsale {
 		return productSum;
 	}
 
+	/**
+	 * This method returns common number count of different Pokemon selected
+	 * products which helps in evaluating the discounts for the combinations.
+	 * Ex: - Pikachu - 3, Squirtle - 2, Charmander - 2. In the above common
+	 * number count is 2
+	 * 
+	 * @param productCount
+	 * @return
+	 */
 	public int findCommonNumber(Map<String, Integer> productCount) {
 		TreeSet<Integer> commonNumber = new TreeSet<Integer>(productCount.values());
 		return commonNumber.first();
@@ -111,16 +147,16 @@ public class Pokemonsale {
 			productQuantities.put("Pikachu", pikachuCount);
 			productQuantities.put("Squirtle", squirtleCount);
 			productQuantities.put("Charmander", charmanderCount);
-			
+
 			pokemonSale.insertProductQuantites(productQuantities);
 			pokemonSale.calculatePrice();
+			
+			System.out.println("\n The Best Price for the selected products is:: " + pokemonSale.bestPrice);
 		} catch (Exception e) {
-			if (e.getMessage() != null || e.getMessage() != "")
+			if (e.getMessage() != null && e.getMessage()!="")
 				System.out.println("\n\t" + e.getMessage());
 			else
 				System.out.println("\n\t INVALID INPUT - PLEASE ENTER VALID INPUT");
 		}
-
-		System.out.println(pokemonSale.bestPrice);
 	}
 }
